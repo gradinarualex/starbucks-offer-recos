@@ -12,14 +12,17 @@ The task is to use the training data to understand what patterns in V1-V7 indica
 
 IRR depicts how many more customers purchased the product with the promotion, as compared to if they didn't receive the promotion. Mathematically, it's the ratio of the number of purchasers in the promotion group to the total number of customers in the purchasers group (treatment) minus the ratio of the number of purchasers in the non-promotional group to the total number of customers in the non-promotional group (control).
 
-$$ IRR = \frac{purch_{treat}}{cust_{treat}} - \frac{purch_{ctrl}}{cust_{ctrl}} $$
-
+```math
+IRR = \frac{purch_{treat}}{cust_{treat}} - \frac{purch_{ctrl}}{cust_{ctrl}}
+```
 
 * **Net Incremental Revenue (NIR)**
 
 NIR depicts how much is made (or lost) by sending out the promotion. Mathematically, this is 10 times the total number of purchasers that received the promotion minus 0.15 times the number of promotions sent out, minus 10 times the number of purchasers who were not given the promotion.
 
-$$ NIR=(10 * purch_{treat} − 0.15 * cust_{treat}) − 10* purch_{ctrl} $$
+```math
+NIR=(10 * purch_{treat} − 0.15 * cust_{treat}) − 10* purch_{ctrl}
+```
 
 **How To Test Your Strategy**  
 After we have a model we're comfortable with, we'll complete the `promotion_strategy` function to pass to the `test_results` function.  
