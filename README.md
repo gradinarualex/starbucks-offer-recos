@@ -18,7 +18,7 @@ IRR depicts how many more customers purchased the product with the promotion, as
 
 NIR depicts how much is made (or lost) by sending out the promotion. Mathematically, this is 10 times the total number of purchasers that received the promotion minus 0.15 times the number of promotions sent out, minus 10 times the number of purchasers who were not given the promotion.
 
-<img src="https://render.githubusercontent.com/render/math?math=NIR=(10 * purch_{treat} − 0.15 * cust_{treat}) − 10* purch_{ctrl}">
+<img src="https://render.githubusercontent.com/render/math?math=NIR=(10*purch_{treat} - 0.15*cust_{treat}) - 10*purch_{ctrl}">
 
 **How To Test Your Strategy**  
 After we have a model we're comfortable with, we'll complete the `promotion_strategy` function to pass to the `test_results` function.  
