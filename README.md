@@ -35,3 +35,6 @@ Comparing quadrant I to II then gives an idea of how well your promotion strateg
 We'll test our strategy against the test dataset used in the final `test_results` function.
 
 ---
+
+## **Licensing**
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

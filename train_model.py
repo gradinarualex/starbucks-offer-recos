@@ -9,7 +9,7 @@ import pandas as pd
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import recall_score, f1_score
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline, FeatureUnion
@@ -33,8 +33,8 @@ def load_data(data_path, target_col='Promotion'):
     # load data from file
     df = pd.read_csv(data_path)
     
-    X = df.iloc[:, 3:] # get only feature columns
-    y = df[target_col].apply(lambda x: 1 if x == 'Yes' else 0)
+    X = df[['V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7']].values # get only feature columns
+    y = df[target_col].apply(lambda x: 1 if x == 'Yes' else 0).values # get only target column
     
     return X, y
 
@@ -54,22 +54,39 @@ def build_model():
     pass
 
 
-def evaluate_model(model, X_test, y_test):
+def evaluate_model(model, X_test, y_test, verbose=True):
     ''' Function to evaluate the performance of our model.
-        Uses recall_score and f1_score to measure performance,
-        as in this model it is most important to reduce false positives.
+        Uses precision, recall and f1 scores to measure performance,
+        as in this model it is most important to minimize false positives
+        and false negatives.
         
         Args:
-            model:
-            X_test:
-            y_test:
+            model: model to be evaluated
+            X_test: test feature matrix
+            y_test: true values of target array
             
         Returns:
-            evaluation_scores (tuple): two-element tuple with first value
-                as recall score and second as f1-score.
+            evaluation_scores (dict): three-element dictionsr with
+            precision score, recall score and third as f1-score.
     '''
     
-    pass
+    # get model predictions
+    y_pred = model.predict(X_test)
+    
+    # create scores dictionary
+    evaluation_scores = {
+        'precision': precision_score(y_test, y_pred),
+        'recall': recall_score(y_test, y_pred),
+        'f1' f1_score(y_test, y_pred)
+    }
+    
+    # if verbose print scores
+    if verbose:
+        print('Precision Score: {}'.format(evaluation_scores['precision']))
+        print('Recall Score:    {}'.format(evaluation_scores['recall']))
+        print('F1 Score:        {}'.format(evaluation_scores['f1']))
+    
+    return evaluation_scores
 
 
 def save_model(model, model_filepath):
@@ -77,14 +94,14 @@ def save_model(model, model_filepath):
     
         Args:
             model: model to be saved on disk
-            model_filepath: file path to where you want to save the model
+            model_filepath: path to where you want to save the model
             
         Returns:
             None
     '''
     
-    filename = 'sb_recommender_model.sav'
-    joblib.dump(model, filename)
+    # save model to disk
+    joblib.dump(model, model_filepath)
     
 
 def main():
@@ -112,7 +129,7 @@ def main():
         print('Please provide the filepath of the starbucks recommedations dataset '\
               'as the first argument and the filepath of the model pickle file to '\
               'save the model to as the second argument. \n\nExample: python '\
-              'train_classifier.py ../data/dataset.csv ./models/recommender_model.sav')
+              'train_classifier.py ../data/dataset.csv ./models/sb_recommender_model.sav')
         
 
 if __name__ == '__main__':
