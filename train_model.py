@@ -73,18 +73,39 @@ def evaluate_model(model, X_test, y_test, verbose=True):
     # get model predictions
     y_pred = model.predict(X_test)
     
+    # create score dataframe
+    score_df = pd.DataFrame({
+        'offered': y_pred,
+        'purchased': y_test
+    })
+    
+    cust_treat = (score_df['offered'] == 1).sum() # number of customers offered (treatment)
+    cust_cntrl = (score_df['offered'] == 0).sum() # number of customers not offered (control)
+
+    purch_treat = ((score_df['offered'] == 1) & (score_df['purchased'] == 1)).sum() # number of offers used (true positives)
+    purch_cntrl = ((score_df['offered'] == 0) & (score_df['purchased'] == 1)).sum() # number of customer not offered that purchased (false negatives)
+    
+    # incremental response rate calculation
+    irr = purch_treat / cust_treat - purch_cntrl / cust_cntrl
+    # net incremental revenue
+    nir = (10 * purch_treat - 0.15 * cust_treat) - 10 * purch_cntrl
+    
     # create scores dictionary
     evaluation_scores = {
         'precision': precision_score(y_test, y_pred),
         'recall': recall_score(y_test, y_pred),
-        'f1' f1_score(y_test, y_pred)
+        'f1': f1_score(y_test, y_pred),
+        'irr': irr,
+        'nir': nir
     }
     
     # if verbose print scores
     if verbose:
-        print('Precision Score: {}'.format(evaluation_scores['precision']))
-        print('Recall Score:    {}'.format(evaluation_scores['recall']))
-        print('F1 Score:        {}'.format(evaluation_scores['f1']))
+        print('   Precision Score:                  {}'.format(evaluation_scores['precision']))
+        print('   Recall Score:                     {}'.format(evaluation_scores['recall']))
+        print('   F1 Score:                         {}'.format(evaluation_scores['f1']))
+        print('   Incremental Response Rate (IRR):  {}'.format(evaluation_scores['irr']))
+        print('   Net Incremental Revenue (NIR):    {}'.format(evaluation_scores['nir']))
     
     return evaluation_scores
 
